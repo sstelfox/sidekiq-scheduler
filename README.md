@@ -28,18 +28,21 @@ details on individual methods, you might want to try the [rdoc](http://rdoc.info
     #If you use a Gemfile:
     gem 'sidekiq-scheduler'
 
-NOTE: Since it's currently not possible to hook into the default option
+
+## Usage
+
+    #To enable the scheduler you need to add this line to your sidekiq server initializer:
+    SidekiqScheduler.enable_scheduler
+
+## Configuration
+
+Since it's currently not possible to hook into the default option
 parsing provided by sidekiq you will need to use a configuration file to
 override the scheduler options.
 Available options are:
 
     :schedule: <the schedule to be run>
     :dynamic: <if true the schedule can we modified in runtime>
-
-## Usage
-
-To enable the scheduler you need to add this line to your sidekiq server initializer:
-    SidekiqScheduler.enable_scheduler
 
 ## Scheduled Jobs (Recurring Jobs)
 
