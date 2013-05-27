@@ -1,0 +1,22 @@
+# Sidekiq config
+:enable_rails_extensions: false
+:concurrency: 25
+:environment: development
+:timeout: 8
+:queues:
+  - email
+  - reverse_payment
+  - reverse_transfer
+  - update_all_bills
+  - update_user_bills
+
+# Sidekiq schedule config
+:scheduler: true
+:dynamic: false
+:schedule:
+  fetch_bills:
+    cron: '/1 * * * *' # This means that it is run at 01:00 AM every day
+    class: AsyncTasks::AsyncUpdateAllBills
+    queue: update_all_bills
+    args: ''
+    description: 'This job is executed to get new bills from the billers.'

@@ -9,6 +9,7 @@ This table explains the version requirements for redis
 
 | sidekiq-scheduler version | required redis version|
 |:--------------------------|----------------------:|
+| < 0.4.0                   | < 2.2.0              |
 | >= 0.4.0                  | >= 2.2.0              |
 
 Scheduled jobs are like cron jobs, recurring on a regular basis.
@@ -16,7 +17,7 @@ Scheduled jobs are like cron jobs, recurring on a regular basis.
 ### Documentation
 
 This README covers what most people need to know. If you're looking for
-details on individual methods, you might want to try the [rdoc](http://rdoc.info/github/yabawock/sidekiq-scheduler/master/frames).
+details on individual methods, you might want to try the [rdoc](http://rdoc.info/github/SidekiqScheduler/sidekiq-scheduler/master/frames).
 
 
 ## Installation
@@ -27,14 +28,6 @@ details on individual methods, you might want to try the [rdoc](http://rdoc.info
     #If you use a Gemfile:
     gem 'sidekiq-scheduler'
 
-    #Starting the scheduler
-    bundle exec sidekiq-scheduler
-
-The scheduler will perform identically to a normal sidekiq worker with
-an additional scheduler thread being run - in the default configuration
-this will result in 25 worker threads being available on the scheduler
-node but all normal configuration options apply.
-
 NOTE: Since it's currently not possible to hook into the default option
 parsing provided by sidekiq you will need to use a configuration file to
 override the scheduler options.
@@ -43,17 +36,10 @@ Available options are:
     :schedule: <the schedule to be run>
     :dynamic: <if true the schedule can we modified in runtime>
 
-The scheduling thread will sleep this many seconds between looking for
-jobs that need moving to the worker queue. The default is 5 seconds
-which should be fast enough for almost all uses.
+## Usage
 
-NOTE: You DO NOT want to run more than one instance of the scheduler.  Doing
-so will result in the same job being queued multiple times.  You only need one
-instance of the scheduler running per application, regardless of number of servers.
-
-NOTE: If the scheduler thread goes down for whatever reason, the delayed items
-that should have fired during the outage will fire once the scheduler is
-started back up again (even if it is on a new machine).
+To enable the scheduler you need to add this line to your sidekiq server initializer:
+    SidekiqScheduler.enable_scheduler
 
 ## Scheduled Jobs (Recurring Jobs)
 
@@ -147,7 +133,6 @@ Scheduling of recurring jobs has been added to v0.4.0, thanks to [Adrian Gomez](
 
 ## Maintainers
 
-* [Morton Jonuschat](https://github.com/yabawock)
 * [Moove-IT](https://github.com/Moove-it)
 
 ## License
@@ -156,6 +141,6 @@ MIT License
 
 ## Copyright
 
-Copyright 2013 Moove-IT
-Copyright 2012 Morton Jonuschat
-Some parts copyright 2010 Ben VandenBos
+* Copyright 2013 Moove-IT
+* Some parts copyright 2012-2013 Morton Jonuschat
+* Some parts copyright 2010 Ben VandenBos

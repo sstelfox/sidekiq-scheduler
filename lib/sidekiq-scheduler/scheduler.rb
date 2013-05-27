@@ -3,37 +3,40 @@ require 'thwait'
 require 'sidekiq/util'
 require 'sidekiq-scheduler/manager'
 
-module Sidekiq
+module SidekiqScheduler
   class Scheduler
     extend Sidekiq::Util
-
-    class << self
-      # If set, will try to update the schulde in the loop
-      attr_accessor :dynamic
-    end
 
     # the Rufus::Scheduler jobs that are scheduled
     def self.scheduled_jobs
       @@scheduled_jobs
     end
 
-    def self.print_schedule
-      if self.rufus_scheduler
-        logger.info "Scheduling Info\tLast Run"
-        scheduler_jobs = self.rufus_scheduler.all_jobs
-        scheduler_jobs.each do |k, v|
-          logger.info "#{v.t}\t#{v.last}\t"
-        end
+    def self.start
+      logger.info "Starting Scheduler...."
+      #Load the schedule into rufus
+      #If dynamic is set, load that schedule otherwise use normal load
+      if Sidekiq.dynamic_schedule
+        SidekiqScheduler::Scheduler.reload_schedule!
+      else
+        SidekiqScheduler::Scheduler.load_schedule!
       end
+      logger.info 'Scheduler Stared'
+    end
+
+    def self.stop
+      logger.info "Stopping Scheduler...."
+      self.rufus_scheduler.stop
+      @rufus_scheduler = nil
+      @@scheduled_jobs = {}
+      logger.info "Scheduler Stopped"
     end
 
     # Pulls the schedule from Sidekiq.schedule and loads it into the
     # rufus scheduler instance
     def self.load_schedule!
-      logger.info 'Loading Schedule'
-
       # Need to load the schedule from redis for the first time if dynamic
-      Sidekiq.reload_schedule! if dynamic
+      Sidekiq.reload_schedule! if Sidekiq.dynamic_schedule
 
       logger.info 'Schedule empty! Set Sidekiq.schedule' if Sidekiq.schedule.empty?
 
@@ -44,8 +47,6 @@ module Sidekiq
       end
 
       Sidekiq.redis { |r| r.del(:schedules_changed) }
-
-      logger.info 'Schedules Loaded'
     end
 
     # modify interval type value to value with options if options available
