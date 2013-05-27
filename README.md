@@ -9,7 +9,7 @@ This table explains the version requirements for redis
 
 | sidekiq-scheduler version | required redis version|
 |:--------------------------|----------------------:|
-| < 0.4.0                   | < 2.2.0              |
+| < 0.4.0                   | < 2.2.0               |
 | >= 0.4.0                  | >= 2.2.0              |
 
 Scheduled jobs are like cron jobs, recurring on a regular basis.
@@ -17,7 +17,7 @@ Scheduled jobs are like cron jobs, recurring on a regular basis.
 ### Documentation
 
 This README covers what most people need to know. If you're looking for
-details on individual methods, you might want to try the [rdoc](http://rdoc.info/github/SidekiqScheduler/sidekiq-scheduler/master/frames).
+details on individual methods, you might want to try the [rdoc](http://rdoc.info/github/Moove-it/sidekiq-scheduler/master/frames).
 
 
 ## Installation
